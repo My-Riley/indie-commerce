@@ -7,7 +7,7 @@
     "dev:worker": "ts-node ./src/index-worker.ts",
     "dev:dashboard": "vite --clearScreen false",
     "dev": "concurrently --kill-others npm:dev:*",
-    "build": "tsc",
+    "build": "tsc && npm run build:dashboard",
     "build:dashboard": "vite build",
     "start:server": "node ./dist/index.js",
     "start:worker": "node ./dist/index-worker.js",
@@ -25,6 +25,7 @@
   "devDependencies": {
     "@vendure/cli": "3.5.2",
     "concurrently": "9.2.1",
+    "start-server-and-test": "^2.1.3",
     "typescript": "5.8.2"
   }
 }

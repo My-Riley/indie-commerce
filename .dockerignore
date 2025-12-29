@@ -1,0 +1,11 @@
+**/node_modules
+**/dist
+**/.next
+**/static/assets
+**/static/email/test-emails
+.git
+.gitignore
+.env
+.env.local
+npm-debug.log
+README.md

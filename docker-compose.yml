@@ -1,0 +1,84 @@
+version: "3.8"
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    container_name: server
+    ports:
+      - 3000:3000
+    command: ["npm", "run", "start:server", "-w", "server"]
+    volumes:
+      - vendure_assets:/app/apps/server/static/assets
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_NAME: indie-commerce
+      DB_USERNAME: postgres
+      DB_PASSWORD: 123456
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - vendure_network
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    container_name: worker
+    command: ["npm", "run", "start:worker", "-w", "server"]
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_NAME: indie-commerce
+      DB_USERNAME: postgres
+      DB_PASSWORD: 123456
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - vendure_network
+
+  storefront:
+    build:
+      context: .
+      dockerfile: apps/storefront/Dockerfile
+      args:
+        VENDURE_SHOP_API_URL: http://server:3000/shop-api
+    container_name: storefront
+    ports:
+      - 3001:3001
+    depends_on:
+      server:
+        condition: service_healthy
+    networks:
+      - vendure_network
+
+  database:
+    image: postgres:16-alpine
+    container_name: database
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: indie-commerce
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d indie-commerce"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - vendure_network
+
+networks:
+  vendure_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  vendure_assets:
