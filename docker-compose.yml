@@ -1,5 +1,4 @@
-version: "3.8"
-
+version: "3"
 services:
   server:
     build:
@@ -11,17 +10,14 @@ services:
     command: ["npm", "run", "start:server", "-w", "server"]
     volumes:
       - vendure_assets:/app/apps/server/static/assets
+    depends_on:
+      - database
     environment:
       DB_HOST: database
       DB_PORT: 5432
       DB_NAME: indie-commerce
       DB_USERNAME: postgres
       DB_PASSWORD: 123456
-    depends_on:
-      database:
-        condition: service_healthy
-    networks:
-      - vendure_network
 
   worker:
     build:
@@ -29,32 +25,31 @@ services:
       dockerfile: apps/server/Dockerfile
     container_name: worker
     command: ["npm", "run", "start:worker", "-w", "server"]
+    volumes:
+      - vendure_assets:/app/apps/server/static/assets
+    depends_on:
+      - database
     environment:
       DB_HOST: database
       DB_PORT: 5432
       DB_NAME: indie-commerce
       DB_USERNAME: postgres
       DB_PASSWORD: 123456
-    depends_on:
-      database:
-        condition: service_healthy
-    networks:
-      - vendure_network
 
   storefront:
     build:
       context: .
       dockerfile: apps/storefront/Dockerfile
       args:
-        VENDURE_SHOP_API_URL: http://server:3000/shop-api
+        VENDURE_SHOP_API_URL: http://localhost:3000/shop-api  # 构建时
     container_name: storefront
     ports:
       - 3001:3001
+    command: ["node", "apps/storefront/server.js"]
+    environment:
+      VENDURE_SHOP_API_URL: http://server:3000/shop-api  # 运行时
     depends_on:
-      server:
-        condition: service_healthy
-    networks:
-      - vendure_network
+      - server
 
   database:
     image: postgres:16-alpine
@@ -72,12 +67,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    networks:
-      - vendure_network
-
-networks:
-  vendure_network:
-    driver: bridge
 
 volumes:
   postgres_data:

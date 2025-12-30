@@ -40,8 +40,3 @@ COPY --from=builder /app/apps/storefront/.next/standalone ./
 COPY --from=builder /app/apps/storefront/.next/static ./apps/storefront/.next/static
 
 EXPOSE 3001
-
-ENV PORT=3001
-ENV HOSTNAME="0.0.0.0"
-
-CMD ["node", "apps/storefront/server.js"]

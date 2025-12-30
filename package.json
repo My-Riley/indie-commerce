@@ -9,10 +9,9 @@
     "dev": "concurrently -n server,storefront -c blue,magenta \"npm run dev -w server\" \"npm run dev -w storefront\"",
     "dev:server": "npm run dev -w server",
     "dev:storefront": "npm run dev -w storefront",
-    "build": "npm run build:server && npm run build:storefront:with-server",
-    "build:server": "npm run build -w server",
+    "build": "npm run build:server && npm run build:storefront",
+    "build:server": "npm run build -w server && npm run build:dashboard -w server",
     "build:storefront": "npm run build -w storefront",
-    "build:storefront:with-server": "start-server-and-test \"npm run start:server\" http-get://localhost:3000/health \"npm run build:storefront\"",
     "start": "concurrently -n server,storefront -c blue,magenta \"npm run start -w server\" \"npm run start -w storefront\"",
     "start:server": "npm run start -w server",
     "start:storefront": "npm run start -w storefront"
@@ -21,4 +20,3 @@
     "concurrently": "^9.0.0"
   }
 }
-
