@@ -18,6 +18,8 @@ services:
       DB_NAME: indie-commerce
       DB_USERNAME: postgres
       DB_PASSWORD: 123456
+    env_file:
+      - apps/server/.env
 
   worker:
     build:
@@ -35,6 +37,8 @@ services:
       DB_NAME: indie-commerce
       DB_USERNAME: postgres
       DB_PASSWORD: 123456
+    env_file:
+      - apps/server/.env
 
   storefront:
     build:

@@ -32,6 +32,7 @@ RUN npm run build -w storefront
 FROM node:20-alpine AS runner
 WORKDIR /app
 
+ENV PORT=3001
 ENV NODE_ENV=production
 
 # Copy necessary files for standalone mode

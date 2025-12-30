@@ -63,28 +63,41 @@ export const config: VendureConfig = {
         GraphiqlPlugin.init(),
         AssetServerPlugin.init({
             route: 'assets',
-            assetUploadDir: path.join(__dirname, '../static/assets'),
+            assetUploadDir: process.env.ASSET_VOLUME_PATH || path.join(__dirname, '../static/assets'),
             // For local dev, the correct value for assetUrlPrefix should
             // be guessed correctly, but for production it will usually need
             // to be set manually to match your production url.
-            assetUrlPrefix: IS_DEV ? undefined : 'https://www.my-shop.com/assets/',
+            assetUrlPrefix: IS_DEV ? undefined : `https://${process.env.PUBLIC_DOMAIN}/assets/`,
         }),
         DefaultSchedulerPlugin.init(),
         DefaultJobQueuePlugin.init({ useDatabaseForBuffer: true }),
         DefaultSearchPlugin.init({ bufferUpdates: false, indexStockStatus: true }),
         EmailPlugin.init({
-            devMode: true,
-            outputPath: path.join(__dirname, '../static/email/test-emails'),
-            route: 'mailbox',
+            ...(IS_DEV ? {
+                devMode: true,
+                outputPath: path.join(__dirname, '../static/email/test-emails'),
+                route: 'mailbox',
+            } : {
+                transport: {
+                    type: 'smtp',
+                    host: process.env.SMTP_HOST!,
+                    port: +(process.env.SMTP_PORT || 587),
+                    secure: process.env.SMTP_SECURE === 'true',
+                    auth: {
+                        user: process.env.SMTP_USER!,
+                        pass: process.env.SMTP_PASS!,
+                    },
+                },
+            }),
             handlers: defaultEmailHandlers,
             templateLoader: new FileBasedTemplateLoader(path.join(__dirname, '../static/email/templates')),
             globalTemplateVars: {
                 // The following variables will change depending on your storefront implementation.
                 // Here we are assuming a storefront running at http://localhost:8080.
-                fromAddress: '"example" <noreply@example.com>',
-                verifyEmailAddressUrl: 'http://localhost:8080/verify',
-                passwordResetUrl: 'http://localhost:8080/password-reset',
-                changeEmailAddressUrl: 'http://localhost:8080/verify-email-address-change'
+                fromAddress: process.env.EMAIL_FROM_ADDRESS || '"example" <noreply@example.com>',
+                verifyEmailAddressUrl: `${process.env.STOREFRONT_URL}/verify`,
+                passwordResetUrl: `${process.env.STOREFRONT_URL}/password-reset`,
+                changeEmailAddressUrl: `${process.env.STOREFRONT_URL}/verify-email-address-change`
             },
         }),
         DashboardPlugin.init({
