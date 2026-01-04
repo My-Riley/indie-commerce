@@ -17,10 +17,13 @@ declare global {
             DB_PASSWORD: string;
             DB_SCHEMA: string;
             SMTP_HOST?: string;
+            // SMTP Configuration
             SMTP_PORT?: string;
             SMTP_SECURE?: string;
             SMTP_USER?: string;
             SMTP_PASS?: string;
+            // Google Authentication Configuration
+            GOOGLE_CLIENT_ID: string;
         }
     }
 }

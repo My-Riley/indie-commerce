@@ -20,6 +20,7 @@
     "@vendure/email-plugin": "3.5.2",
     "@vendure/graphiql-plugin": "3.5.2",
     "dotenv": "17.2.3",
+    "google-auth-library": "^10.5.0",
     "pg": "8.16.3"
   },
   "devDependencies": {
