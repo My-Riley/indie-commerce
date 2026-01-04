@@ -418,3 +418,26 @@ export const UpdateCustomerEmailAddressMutation = graphql(`
         }
     }
 `);
+
+export const AuthenticateMutation = graphql(`
+    mutation Authenticate($input: AuthenticationInput!) {
+        authenticate(input: $input) {
+            __typename
+            ... on CurrentUser {
+                id
+                identifier
+                hasPassword
+            }
+            ... on ErrorResult {
+                errorCode
+                message
+            }
+        }
+    }
+`);
+
+export const SetPasswordForGoogleUserMutation = graphql(`
+    mutation SetPasswordForGoogleUser($password: String!) {
+        setPasswordForGoogleUser(password: $password)
+    }
+`);

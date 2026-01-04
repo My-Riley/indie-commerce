@@ -21,6 +21,16 @@ export const GetActiveCustomerQuery = graphql(`
     }
 `, [ActiveCustomerFragment]);
 
+export const GetCurrentUserQuery = graphql(`
+    query GetCurrentUser {
+        me {
+            id
+            identifier
+            hasPassword
+        }
+    }
+`);
+
 export const SearchProductsQuery = graphql(`
     query SearchProducts($input: SearchInput!) {
         search(input: $input) {
