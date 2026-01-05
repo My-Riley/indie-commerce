@@ -97,7 +97,7 @@ export const config: VendureConfig = {
                 // Here we are assuming a storefront running at http://localhost:8080.
                 fromAddress: process.env.EMAIL_FROM_ADDRESS || '"example" <noreply@example.com>',
                 verifyEmailAddressUrl: `${process.env.STOREFRONT_URL}/verify`,
-                passwordResetUrl: `${process.env.STOREFRONT_URL}/password-reset`,
+                passwordResetUrl: `${process.env.STOREFRONT_URL}/reset-password`,
                 changeEmailAddressUrl: `${process.env.STOREFRONT_URL}/verify-email-address-change`
             },
         }),

@@ -1,20 +1,46 @@
 'use client';
 
-import {use} from 'react';
+import {use, useEffect, useState, useRef} from 'react';
 import {VerifyResult} from './verify-result';
 import {verifyAccountAction} from './actions';
 import {Card, CardContent} from '@/components/ui/card';
 import {Button} from '@/components/ui/button';
 import Link from 'next/link';
-import {XCircle} from 'lucide-react';
+import {XCircle, Loader2} from 'lucide-react';
 
 interface VerifyContentProps {
     searchParams: Promise<{ token?: string }>;
 }
 
+type VerifyResultType = {success: boolean; error?: undefined} | {error: string; success?: undefined};
+
 export function VerifyContent({searchParams}: VerifyContentProps) {
     const params = use(searchParams);
     const token = params.token;
+    const [result, setResult] = useState<VerifyResultType | null>(null);
+    const [isVerifying, setIsVerifying] = useState(false);
+    const hasVerified = useRef(false);
+
+    useEffect(() => {
+        // Only verify once when component mounts and token is available
+        if (!token || hasVerified.current) {
+            return;
+        }
+
+        hasVerified.current = true;
+        setIsVerifying(true);
+
+        verifyAccountAction(token)
+            .then((verifyResult) => {
+                setResult(verifyResult);
+            })
+            .catch(() => {
+                setResult({error: 'An unexpected error occurred. Please try again.'});
+            })
+            .finally(() => {
+                setIsVerifying(false);
+            });
+    }, [token]);
 
     if (!token) {
         return (
@@ -46,7 +72,23 @@ export function VerifyContent({searchParams}: VerifyContentProps) {
         );
     }
 
-    const verifyPromise = verifyAccountAction(token);
+    if (isVerifying || !result) {
+        return (
+            <Card>
+                <CardContent className="pt-6 space-y-4">
+                    <div className="flex justify-center">
+                        <Loader2 className="h-16 w-16 text-primary animate-spin"/>
+                    </div>
+                    <div className="space-y-2 text-center">
+                        <h1 className="text-2xl font-bold">Verifying Your Account</h1>
+                        <p className="text-muted-foreground">
+                            Please wait while we verify your email address...
+                        </p>
+                    </div>
+                </CardContent>
+            </Card>
+        );
+    }
 
-    return <VerifyResult resultPromise={verifyPromise}/>;
+    return <VerifyResult result={result}/>;
 }
