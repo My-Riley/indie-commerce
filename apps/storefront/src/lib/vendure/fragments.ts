@@ -29,5 +29,12 @@ export const ActiveCustomerFragment = graphql(`
         firstName
         lastName
         emailAddress
+        user {
+            id
+            authenticationMethods {
+                id
+                strategy
+            }
+        }
     }
 `);
