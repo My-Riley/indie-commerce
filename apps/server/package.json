@@ -14,6 +14,7 @@
     "start": "concurrently npm:start:*"
   },
   "dependencies": {
+    "@pinelab/vendure-plugin-shipping-extensions": "^3.2.2",
     "@vendure/asset-server-plugin": "3.5.2",
     "@vendure/core": "3.5.2",
     "@vendure/dashboard": "3.5.2",

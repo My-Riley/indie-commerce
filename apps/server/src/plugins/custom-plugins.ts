@@ -1,5 +1,7 @@
 import 'dotenv/config';
 import { GoogleAuthPlugin } from './google-auth/google-auth-plugin';
+import { ShippingExtensionsPlugin } from './shipping-method/shipping-extensions-plugin';
+
 
 /**
  * Custom Plugin Collection
@@ -7,5 +9,6 @@ import { GoogleAuthPlugin } from './google-auth/google-auth-plugin';
  */
 export const customPlugins = [
     GoogleAuthPlugin.init({ googleClientId: process.env.GOOGLE_CLIENT_ID! }),
+    ShippingExtensionsPlugin.init(),
 ];
 

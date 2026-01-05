@@ -10,6 +10,7 @@ import { AssetServerPlugin } from '@vendure/asset-server-plugin';
 import { DashboardPlugin } from '@vendure/dashboard/plugin';
 import { GraphiqlPlugin } from '@vendure/graphiql-plugin';
 import { customPlugins } from './plugins/custom-plugins';
+import { ccPaymentEligibilityChecker } from './plugins/payment-eligibility-checkers';
 import 'dotenv/config';
 import path from 'path';
 
@@ -56,6 +57,7 @@ export const config: VendureConfig = {
     },
     paymentOptions: {
         paymentMethodHandlers: [dummyPaymentHandler],
+        paymentMethodEligibilityCheckers: [ccPaymentEligibilityChecker],
     },
     // When adding or altering custom field definitions, the database will
     // need to be updated. See the "Migrations" section in README.md.
