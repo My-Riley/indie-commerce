@@ -20,28 +20,7 @@ export const customFieldsConfig = {
     OrderLine: [],
     Payment: [],
     PaymentMethod: [],
-    Product: [
-        {
-            name: 'productDetails',
-            type: 'localeText' as const,
-            label: [
-                { languageCode: LanguageCode.en, value: 'Product Details' },
-                { languageCode: LanguageCode.zh_Hans, value: '产品详情' },
-            ],
-            ui: { component: 'rich-text-form-input', tab: 'Details' },
-            nullable: true,
-        },
-        {
-            name: 'sizeGuide',
-            type: 'localeText' as const,
-            label: [
-                { languageCode: LanguageCode.en, value: 'Size Guide' },
-                { languageCode: LanguageCode.zh_Hans, value: '尺码指南' },
-            ],
-            ui: { component: 'rich-text-form-input', tab: 'Size' },
-            nullable: true,
-        }
-    ],
+    Product: [],
     ProductOption: [],
     ProductOptionGroup: [],
     ProductVariant: [
